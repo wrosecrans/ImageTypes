@@ -7,7 +7,7 @@ find_package(OpenImageIO REQUIRED)
 find_package(R3DSDK)
 
 
-add_executable(${PROJECT_NAME} "main.cpp")
+add_executable(${PROJECT_NAME} "main.cpp" "w_red_util.h" "w_red_util.cpp")
 
 target_link_libraries(${PROJECT_NAME} ${OPENIMAGEIO_LIBRARIES})
 
