@@ -1,9 +1,12 @@
 # - Try to find R3D SDK
 #
-#  Set RED_ROOT Environment variable to root of the SDK
-#  Otherwise it will try to guess some plausible paths.
+# Inputs:
 #
-# Once done, this will define
+#  Set RED_ROOT Environment variable to root of the SDK
+#    Otherwise it will try to guess some plausible paths.
+#  Set RED_LIB_NAME if it is guessing the wrong library and causing linker errors.
+#
+# Outputs - Once done, this will define:
 #
 #  RED_FOUND - system has R3D SDK
 #  RED_INCLUDE_DIR - the include directory
@@ -13,11 +16,29 @@
 
 include (FindPackageHandleStandardArgs)
 
-# Assuming only C++11 and 64 bit support is needed.
+# Assuming only C++11 and 64 bit support is needed with new-ish compiler.
 # Set RED_LIB_NAME before invoking this file to override.
 if (NOT DEFINED RED_LIB_NAME)
-    set(RED_LIB_NAME R3DSDKPIC-cpp11)
+    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+        set(RED_LIB_NAME R3DSDKPIC-cpp11)
+    else()
+        # It's rumored that there was once someone who completely understood
+        # the differences between the various MSVCRT MT, MD, MDd, etc. options.
+        # But if such a person ever did exist, they certainly can't be found here.
+
+        # It seems likely that it's more reliable to just tell you to set RED_LIB_NAME
+        # if this is wrong, rather than make it ocmplicated enough to try fully
+        # parsing out all the combinations of compiler, build mode, etc.
+
+        # message(${CMAKE_BUILD_TYPE})
+        if(CMAKE_BUILD_TYPE MATCHES Debug)
+            set(RED_LIB_NAME R3DSDK-2017MDd)
+        else()
+            set(RED_LIB_NAME R3DSDK-2017MD)
+        endif()
+    endif()
 endif()
+
 
 
 if(DEFINED ENV{RED_ROOT})
@@ -36,7 +57,7 @@ else()
         ${CMAKE_CURRENT_SOURCE_DIR}/../../R3DSDKv*
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../R3DSDKv*
         )
-    message("  in " ${RED_SDK_PATHS})
+    message("Looking in " ${RED_SDK_PATHS})
     find_path(RED_ROOT Include/R3DSDK.h
               PATHS ${RED_SDK_PATHS}
              )
@@ -64,6 +85,8 @@ if(RED_FOUND)
         set(RED_RUNTIME_LIBRARIES ${RED_ROOT}/Redistributable/win)
     endif()
 endif()
-message("Runtime libs: " ${RED_RUNTIME_LIBRARIES})
+
+# message("R3D SDK: " ${RED_INCLUDE_DIR} "  " ${RED_LIBRARIES} "  " ${RED_RUNTIME_LIBRARIES})
+
 mark_as_advanced(RED_LIBRARY RED_INCLUDE_DIR)
 

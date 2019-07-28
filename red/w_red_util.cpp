@@ -12,9 +12,9 @@ using namespace std;
 using namespace OIIO;
 using namespace R3DSDK;
 
-typedef map<u_int32_t, string> modelist;
+typedef map<uint32_t, string> modelist;
 
-string mode_as_string(u_int32_t mode) {
+string mode_as_string(uint32_t mode) {
     char *mode_c = (char *) (&mode);
     string result;
     result += (mode_c[3]);
@@ -61,7 +61,7 @@ modelist VideoPixelTypes() {
  *
  */
 
-int bits_per_sample(u_int32_t mode) {
+int bits_per_sample(uint32_t mode) {
     switch(mode) {
     case PixelType_16Bit_RGB_Planar:
     case PixelType_16Bit_RGB_Interleaved:
@@ -85,7 +85,7 @@ int bits_per_sample(u_int32_t mode) {
 }
 
 
-size_t mem_needed(int w, int h, int n_channels=3, int bytes_per_samp=1)
+size_t mem_needed(int w, int h, int n_channels, int bytes_per_samp)
 {
     return w * h * n_channels * bytes_per_samp;
 }
@@ -140,7 +140,7 @@ unsigned char * AlignedMalloc(size_t & sizeNeeded)
 
 // DECODE_FULL_RES_PREMIUM == Premium Res Full Decode == "PRFD"
 
-int res_scale_for_decode_mode(u_int32_t mode) {
+int res_scale_for_decode_mode(uint32_t mode) {
     switch (mode_as_string(mode)[2]) {
     case 'F':
         return 1;
