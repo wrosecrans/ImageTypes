@@ -16,7 +16,7 @@ project(red_demo)
 
 # A Nonsense "data" target can be convenient if you open
 # this project in an IDE, so misc. files show up in the project GUI.
-add_custom_target(data COMMAND dir SOURCES README.md)
+add_custom_target(data COMMAND dir SOURCES Readme.md)
 
 
 

@@ -32,6 +32,13 @@ int main(int argc, char *argv[]) {
     Clip clip(file_path.c_str());
     auto w = clip.Width(), h = clip.Height();
     cout << "Clip " << w << "x" << h << " : status: " << clip.Status() << endl;
+    resolution r(640, 480);
+    resolution full(w, h);
+    auto m = adequate_decode_mode(full, r);
+    auto output_r = scaled_resolution(full, m);
+    cout << "Adequate mode : " << m << " " << mode_as_string(m) << ": " << DecodeModes()[m]
+            << " Scaled to : " << output_r.first << "x" << output_r.second <<  endl;
+
 
     VideoDecodeJob job;
     job.BytesPerRow = w * 4 * 1;
