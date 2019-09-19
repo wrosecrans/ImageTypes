@@ -16,7 +16,8 @@ project(red_demo)
 
 # A Nonsense "data" target can be convenient if you open
 # this project in an IDE, so misc. files show up in the project GUI.
-add_custom_target(data COMMAND dir SOURCES Readme.md)
+
+add_custom_target(red-data COMMAND dir SOURCES Readme.md)
 
 
 
@@ -29,14 +30,14 @@ add_executable(${PROJECT_NAME} "main.cpp" "w_red_util.h" "w_red_util.cpp")
 target_link_libraries(${PROJECT_NAME} ${OPENIMAGEIO_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENIMAGEIO_INCLUDE_DIR})
 
-if(NOT RED_FOUND)
+if(NOT R3DSDK_FOUND)
     message("Skipping R3D SDK Support.")
     target_compile_definitions(${PROJECT_NAME} PUBLIC "-DUSE_RED=0")
 else()
     message("Building with R3D SDK Support.")
-    target_link_libraries(${PROJECT_NAME} ${RED_LIBRARIES})
-    target_include_directories(${PROJECT_NAME} PUBLIC ${RED_INCLUDE_DIR})
-    target_compile_definitions(${PROJECT_NAME} PUBLIC "-DUSE_RED=1" "-DREDRUNTIME=\"${RED_RUNTIME_LIBRARIES}\"")
+    target_link_libraries(${PROJECT_NAME} ${R3DSDK_LIBRARIES})
+    target_include_directories(${PROJECT_NAME} PUBLIC ${R3DSDK_INCLUDE_DIR})
+    target_compile_definitions(${PROJECT_NAME} PUBLIC "-DUSE_RED=1" "-DREDRUNTIME=\"${R3DSDK_RUNTIME_LIBRARIES}\"")
 
 endif()
 
